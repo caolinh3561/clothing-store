@@ -23,39 +23,35 @@ const firebaseConfig = {
 // Initialize Firebase
 const fireBaseApp = initializeApp(firebaseConfig);
 
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({
+const gooleProvider = new GoogleAuthProvider();
+gooleProvider.setCustomParameters({
   prompt: "select_account",
 });
 
 export const auth = getAuth();
-export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
+export const signInWithGooglePopup = () => signInWithPopup(auth, gooleProvider);
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, gooleProvider);
 
 export const db = getFirestore();
 
 export const createUserDocumentFromAuth = async (userAuth) => {
-  const userDocRef = doc(db, 'users', userAuth.uid);
+  const userDocRef = doc(db, "users", userAuth.uid);
 
   const userSnapshot = await getDoc(userDocRef);
-  console.log("userAuth ",userAuth);
-  console.log("userDocRef ",userDocRef);
-  console.log("userSnapshot ",userSnapshot);
-  console.log(userSnapshot.exists());
 
-  if(!userSnapshot.exists()){
-    const {displayName, email} = userAuth;
+  if (!userSnapshot.exists()) {
+    const { displayName, email } = userAuth;
     try {
       const createAt = new Date();
       setDoc(userDocRef, {
         displayName,
         email,
-        createAt
-      })
+        createAt,
+      });
     } catch (error) {
-      console.log("error while creating user document ",error.message);
+      console.log("error while creating user document ", error.message);
     }
   }
-  console.log(userSnapshot.exists());
-
   return userDocRef;
-}
+};
