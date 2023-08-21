@@ -1,9 +1,7 @@
 import SignUpForm from "../../components/sign-up-form/sign-up-form.component";
 import {
-    auth,
     signInWithGooglePopup,
-    createUserDocumentFromAuth,
-    signInWithGoogleRedirect,
+    createUserDocumentFromAuth
 } from "../../utils/firebase/firebase.utils";
 
 
