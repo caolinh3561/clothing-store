@@ -1,59 +1,105 @@
-import {useState} from 'react';
-import { createUserDocumentFromAuth, signInWithGoogleEmailAndPassword, createUserWithGoogleEmailAndPassword } from '../../utils/firebase/firebase.utils';
+import { useState } from "react";
+import {
+  createUserDocumentFromAuth,
+  signInWithGoogleEmailAndPassword,
+  createUserWithGoogleEmailAndPassword,
+} from "../../utils/firebase/firebase.utils";
+import FormInput from "../form-input/form-input.component";
+import FormButton from "../form-button/form-button.component";
+import './sign-up-form.styles.scss';
 
 const initialFormFields = {
-    displayName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-}
+  displayName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 const SignUpForm = () => {
+  const [formFields, setFormFields] = useState(initialFormFields);
+  const { displayName, email, password, confirmPassword } = formFields;
 
-    const [formFields, setFormFields] = useState(initialFormFields);
-    const {displayName, email, password, confirmPassword} = formFields;
+  const handleOnChange = (event) => {
+    const { name, value } = event.target;
+    setFormFields({ ...formFields, [name]: value });
+  };
 
-    const handleOnChange = (event) => {
-        const {name, value} = event.target;
-        setFormFields({...formFields,[name]:value});
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log({ displayName, email, password, confirmPassword });
+    if (password !== confirmPassword) {
+      alert("passwords do not match!");
+      return;
     }
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        console.log({displayName, email, password, confirmPassword});
-        if(password !== confirmPassword || displayName.length <= 1) return;
-        try {
-
-            const userAuth = await createUserWithGoogleEmailAndPassword(email, password);
-            if(userAuth && userAuth.user){
-                userAuth.user.displayName = displayName;
-            }
-            const userDocRef = createUserDocumentFromAuth(userAuth.user);
-            const signIn = signInWithGoogleEmailAndPassword(email, password);
-            console.log(userAuth);
-        } catch (error) {
-            console.log("logging is failed with error ",error.message);
-        }
-        // const { user } = await signInWithGoogleEmailAndPassword(email, password);
+    try {
+      const userAuth = await createUserWithGoogleEmailAndPassword(
+        email,
+        password
+      );
+      if (userAuth && userAuth.user) {
+        userAuth.user.displayName = displayName;
+      }
+      const userDocRef = createUserDocumentFromAuth(userAuth.user);
+      const signIn = signInWithGoogleEmailAndPassword(email, password);
+      console.log(userAuth);
+    } catch (error) {
+      console.log("logging is failed with error ", error.message);
     }
+  };
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <h1>Sign Up</h1>
-                <label>Display Name</label>
-                <input type="text" required value={displayName} onChange={handleOnChange} name='displayName' />
+  return (
+    <div className="sign-up-container">
+      <h2>Don't have an account?</h2>
+      <span>Sign up with your email and password</span>
+      <form onSubmit={handleSubmit}>
+        <FormInput
+          label="Display Name"
+          inputOptions={{
+            type: "text",
+            required: true,
+            value: displayName,
+            onChange: handleOnChange,
+            name: "displayName",
+          }}
+        />
 
-                <label>Email</label>
-                <input type="email" required value={email} onChange={handleOnChange} name='email' />
+        <FormInput
+          label="Email"
+          inputOptions={{
+            type: "email",
+            required: true,
+            value: email,
+            onChange: handleOnChange,
+            name: "email",
+          }}
+        />
 
-                <label>Password</label>
-                <input type="password" required value={password} onChange={handleOnChange} name='password' />
+        <FormInput
+          label="Password"
+          inputOptions={{
+            type: "password",
+            required: true,
+            value: password,
+            onChange: handleOnChange,
+            name: "password",
+          }}
+        />
 
-                <label>Confirm Password</label>
-                <input type="password" required value={confirmPassword} onChange={handleOnChange} name='confirmPassword' />
-                <button type='submit'>Submit</button>
-        </form>
-    )
-}
+        <FormInput
+          label="Confirm Password"
+          inputOptions={{
+            type: "password",
+            required: true,
+            value: confirmPassword,
+            onChange: handleOnChange,
+            name: "confirmPassword",
+          }}
+        />
+
+        <FormButton type="submit">Sign Up</FormButton>
+      </form>
+    </div>
+  );
+};
 
 export default SignUpForm;
