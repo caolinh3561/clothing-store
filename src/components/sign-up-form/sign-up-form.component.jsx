@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   createUserDocumentFromAuth,
   signInWithGoogleEmailAndPassword,
@@ -7,6 +7,7 @@ import {
 import FormInput from "../form-input/form-input.component";
 import FormButton from "../form-button/form-button.component";
 import './sign-up-form.styles.scss';
+import { UserContext } from "../../contexts/user.context";
 
 const initialFormFields = {
   displayName: "",
@@ -18,7 +19,8 @@ const initialFormFields = {
 const SignUpForm = () => {
   const [formFields, setFormFields] = useState(initialFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
-
+  const {setCurrentUser, currentUser} = useContext(UserContext);
+  console.log('currentUser ',currentUser);
   const handleOnChange = (event) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
@@ -38,11 +40,20 @@ const SignUpForm = () => {
       );
       if (userAuth && userAuth.user) {
         userAuth.user.displayName = displayName;
+        createUserDocumentFromAuth(userAuth.user);
       }
-      const userDocRef = createUserDocumentFromAuth(userAuth.user);
-      const signIn = signInWithGoogleEmailAndPassword(email, password);
-      console.log(userAuth);
+      const user = await signInWithGoogleEmailAndPassword(email, password);
+      setCurrentUser(user);
+
     } catch (error) {
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          alert('Email already in used');
+          break;
+      
+        default:
+          break;
+      }
       console.log("logging is failed with error ", error.message);
     }
   };

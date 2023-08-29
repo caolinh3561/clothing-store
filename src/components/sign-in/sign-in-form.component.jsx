@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   createUserDocumentFromAuth,
   signInWithGoogleEmailAndPassword,
@@ -7,6 +7,7 @@ import {
 import FormInput from "../form-input/form-input.component";
 import FormButton from "../form-button/form-button.component";
 import './sign-in-form.styles.scss';
+import { UserContext } from "../../contexts/user.context";
 
 const initialFormFields = {
   email: "",
@@ -16,29 +17,30 @@ const initialFormFields = {
 const SignInForm = () => {
   const [formFields, setFormFields] = useState(initialFormFields);
   const { email, password } = formFields;
+  const {setCurrentUser} = useContext(UserContext);
 
   const handleOnChange = (event) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSignInSubmit = async (event) => {
     event.preventDefault();
-    console.log({ email, password });
     try {
-      const signInResponse = signInWithGoogleEmailAndPassword(email, password);
-      console.log("signInResponse ", signInResponse);
+      const user = signInWithGoogleEmailAndPassword(email, password);
+      setCurrentUser(user);
     } catch (error) {
-      console.log("logging is failed with error ", error.code);
+      console.log("logging is failed with error ", error);
     }
   };
 
   const loginByGooglePopup = async () => {
     try {
       const { user } = await signInWithGooglePopup();
-      const userDocRef = createUserDocumentFromAuth(user);
+      createUserDocumentFromAuth(user);
+      setCurrentUser(user);
     } catch (error) {
-      console.log("login with google popup failed ", error.code);
+      console.log("login with google popup failed ", error);
     }
   };
 
@@ -46,7 +48,7 @@ const SignInForm = () => {
     <div className="sign-in-container">
       <h2>Already have an account?</h2>
       <span>Sign in with your email and password</span>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSignInSubmit}>
         <FormInput
           label="Email"
           inputOptions={{
@@ -70,7 +72,7 @@ const SignInForm = () => {
       </form>
       <div className="buttons-container">
           <FormButton type="submit">Sign In</FormButton>
-          <FormButton buttonType="google" onClick={loginByGooglePopup}>
+          <FormButton buttonType='google' inputOptions={{onClick:loginByGooglePopup, type:"button"}}>
             Google Sign In
           </FormButton>
         </div>
