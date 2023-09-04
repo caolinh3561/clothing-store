@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import {
   createUserDocumentFromAuth,
   signInWithGoogleEmailAndPassword,
@@ -7,7 +7,6 @@ import {
 import FormInput from "../form-input/form-input.component";
 import FormButton from "../form-button/form-button.component";
 import './sign-in-form.styles.scss';
-import { UserContext } from "../../contexts/user.context";
 
 const initialFormFields = {
   email: "",
@@ -17,7 +16,6 @@ const initialFormFields = {
 const SignInForm = () => {
   const [formFields, setFormFields] = useState(initialFormFields);
   const { email, password } = formFields;
-  const {setCurrentUser} = useContext(UserContext);
 
   const handleOnChange = (event) => {
     const { name, value } = event.target;
@@ -27,8 +25,7 @@ const SignInForm = () => {
   const handleSignInSubmit = async (event) => {
     event.preventDefault();
     try {
-      const user = signInWithGoogleEmailAndPassword(email, password);
-      setCurrentUser(user);
+      signInWithGoogleEmailAndPassword(email, password);
     } catch (error) {
       console.log("logging is failed with error ", error);
     }
@@ -38,7 +35,6 @@ const SignInForm = () => {
     try {
       const { user } = await signInWithGooglePopup();
       createUserDocumentFromAuth(user);
-      setCurrentUser(user);
     } catch (error) {
       console.log("login with google popup failed ", error);
     }

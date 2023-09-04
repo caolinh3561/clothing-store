@@ -5,7 +5,9 @@ import {
   signInWithRedirect,
   signInWithPopup,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
+  signOut,
+  beforeAuthStateChanged
 } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -30,14 +32,21 @@ gooleProvider.setCustomParameters({
   prompt: "select_account",
 });
 
+
+
 export const auth = getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth, gooleProvider);
 export const signInWithGoogleRedirect = () =>
   signInWithRedirect(auth, gooleProvider);
 
+
 export const createUserWithGoogleEmailAndPassword = (email, password) => createUserWithEmailAndPassword(auth, email, password);
 
 export const signInWithGoogleEmailAndPassword = (email, password) => signInWithEmailAndPassword(auth, email, password);
+
+export const signOutAuthUser = async () => await signOut(auth);
+
+export const beforeAuthStateChangedTest = (callback) => beforeAuthStateChanged(auth, callback)
 
 export const db = getFirestore();
 
