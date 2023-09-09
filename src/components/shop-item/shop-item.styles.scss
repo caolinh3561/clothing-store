@@ -1,0 +1,33 @@
+.shop-item-container{
+    position: relative;
+    width: 280px;
+    height: 450px;
+
+    &:hover .shop-item-button{
+        display: block;
+    }
+
+    .shop-item-image{
+        width: 100%;
+        height: 80%;
+    }
+    .item-info{
+        padding-left: 8px;
+        .shop-item-name{
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+    }
+    .shop-item-button{
+        position: absolute;
+        left: 0; 
+        right: 0; 
+        bottom: 100px;
+        margin-left: auto; 
+        margin-right: auto;
+
+        display: none;
+        width: 200px;
+        transition: 300ms;
+    }
+}

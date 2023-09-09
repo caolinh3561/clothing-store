@@ -9,15 +9,15 @@ export const UserContext = createContext({
 export const UserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const value = { currentUser, setCurrentUser };
-  console.log("currentUser ",currentUser);
+  console.log("currentUser ", currentUser);
 
-  useEffect(()=>{
-    const unsubcrible = beforeAuthStateChangedTest((user)=>{
+  useEffect(() => {
+    const unsubscrible = beforeAuthStateChangedTest((user) => {
       setCurrentUser(user);
     })
 
-    return unsubcrible;
-  },[])
+    return unsubscrible;
+  }, [])
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

@@ -5,9 +5,9 @@ const BUTTON_TYPE_CLASSES = {
     inverted: 'inverted'
 }
 
-const FormButton = ({buttonType, children, inputOptions}) => {
+const FormButton = ({buttonType, buttonClass, children, inputOptions}) => {
     return (
-        <button className={`button-layout ${buttonType? BUTTON_TYPE_CLASSES[buttonType] : ""}`} {...inputOptions}>
+        <button className={`button-layout ${buttonType? BUTTON_TYPE_CLASSES[buttonType] : ""} ${buttonClass}`} {...inputOptions}>
             {children}
         </button>
     )

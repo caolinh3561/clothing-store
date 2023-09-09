@@ -5,12 +5,10 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../contexts/user.context";
 import { signOutAuthUser } from "../../utils/firebase/firebase.utils";
+import CartButton from "../../components/cart-button/cart-button.component";
 
 const Navigation = () => {
-
   const {currentUser} = useContext(UserContext);
-
-  console.log("nav currentUser ",currentUser);
 
   const handleSignOut = () => {
     console.log("handleSignOut")
@@ -35,7 +33,7 @@ const Navigation = () => {
           </Link> : <Link className="nav-link" onClick={handleSignOut}>
             SIGN OUT
           </Link>}
-          
+          <CartButton />
         </div>
       </div>
       <Outlet />

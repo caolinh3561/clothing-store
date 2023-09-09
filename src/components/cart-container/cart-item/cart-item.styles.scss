@@ -1,0 +1,16 @@
+.item-container{
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    
+
+    margin-bottom: 20px;
+    // border: 1px solid black;
+    
+
+
+    .item-image{
+        width: 70px;
+        margin-right: 20px;
+    }
+}
