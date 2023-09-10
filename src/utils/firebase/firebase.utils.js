@@ -12,7 +12,7 @@ import {
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -39,7 +39,6 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, gooleProvider);
 export const signInWithGoogleRedirect = () =>
   signInWithRedirect(auth, gooleProvider);
 
-
 export const createUserWithGoogleEmailAndPassword = (email, password) => createUserWithEmailAndPassword(auth, email, password);
 
 export const signInWithGoogleEmailAndPassword = (email, password) => signInWithEmailAndPassword(auth, email, password);
@@ -50,6 +49,21 @@ export const beforeAuthStateChangedTest = (callback) => beforeAuthStateChanged(a
 
 export const db = getFirestore();
 
+// add data into the firestore
+export const addCollectionAndDocuments = async (collectionKey, arrayObj) => {
+  const collectionRef = collection(db, collectionKey);
+  const batch = writeBatch(db);
+
+  arrayObj.forEach((object) => {
+    const docRef = doc(collectionRef, object.title.toLowerCase());
+    batch.set(docRef, object);
+  });
+
+  await batch.commit();
+  console.log("DONE!");
+}
+
+//create user document in firestore
 export const createUserDocumentFromAuth = async (userAuth) => {
   const userDocRef = doc(db, "users", userAuth.uid);
 
